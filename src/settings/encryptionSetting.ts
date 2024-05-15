@@ -1,12 +1,13 @@
-import { isDevMode } from '@/utils/env';
+import { isDevMode, getAppEnvConfig } from '@/utils/env';
 
 // System default cache time, in seconds
 export const DEFAULT_CACHE_TIME = 60 * 60 * 24 * 7;
+const { AES_KEY, AES_IV } = getAppEnvConfig();
 
 // aes encryption key
 export const cacheCipher = {
-  key: '_11111000001111@',
-  iv: '@11111000001111_',
+  key: AES_KEY,
+  iv: AES_IV,
 };
 
 // Whether the system cache is encrypted using aes
