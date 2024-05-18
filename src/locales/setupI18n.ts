@@ -4,14 +4,14 @@ import type { I18nOptions } from 'vue-i18n';
 import { createI18n } from 'vue-i18n';
 import { setHtmlPageLang, setLoadLocalePool } from './helper';
 import { localeSetting } from '@/settings/localeSetting';
-import { useLocaleStoreWithOut } from '@/store/modules/locale';
+import { useLocaleStore } from '@/store/modules/locale';
 
 const { fallback, availableLocales } = localeSetting;
 
 export let i18n: ReturnType<typeof createI18n>;
 
 async function createI18nOptions(): Promise<I18nOptions> {
-  const localeStore = useLocaleStoreWithOut();
+  const localeStore = useLocaleStore();
   const locale = localeStore.getLocale;
   const defaultLocal = await import(`./lang/${locale}.ts`);
   const message = defaultLocal.default?.message ?? {};

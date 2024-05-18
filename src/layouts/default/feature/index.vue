@@ -12,7 +12,7 @@
   import { useRootSetting } from '@/hooks/setting/useRootSetting';
   import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting';
   import { useDesign } from '@/hooks/web/useDesign';
-  import { useUserStoreWithOut } from '@/store/modules/user';
+  import { useUserStore } from '@/store/modules/user';
 
   import { SettingButtonPositionEnum } from '@/enums/appEnum';
   import { createAsyncComponent } from '@/utils/factory/createAsyncComponent';
@@ -27,7 +27,7 @@
   const SettingDrawer = createAsyncComponent(() => import('@/layouts/default/setting/index.vue'));
 
   const { getShowSettingButton, getSettingButtonPosition, getFullContent } = useRootSetting();
-  const userStore = useUserStoreWithOut();
+  const userStore = useUserStore();
   const { prefixCls } = useDesign('setting-drawer-feature');
   const { getShowHeader } = useHeaderSetting();
 

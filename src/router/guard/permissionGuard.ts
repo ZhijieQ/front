@@ -1,9 +1,9 @@
 import type { Router, RouteRecordRaw } from 'vue-router';
 
-import { usePermissionStoreWithOut } from '@/store/modules/permission';
+import { usePermissionStore } from '@/store/modules/permission';
 
 import { PageEnum } from '@/enums/pageEnum';
-import { useUserStoreWithOut } from '@/store/modules/user';
+import { useUserStore } from '@/store/modules/user';
 
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
 
@@ -16,8 +16,8 @@ const ROOT_PATH = RootRoute.path;
 const whitePathList: PageEnum[] = [LOGIN_PATH];
 
 export function createPermissionGuard(router: Router) {
-  const userStore = useUserStoreWithOut();
-  const permissionStore = usePermissionStoreWithOut();
+  const userStore = useUserStore();
+  const permissionStore = usePermissionStore();
   router.beforeEach(async (to, from, next) => {
     if (
       from.path === ROOT_PATH &&
@@ -82,12 +82,14 @@ export function createPermissionGuard(router: Router) {
     }
 
     // 动态路由加载（首次）
+    // TODO: after call location.realod(), all app will be rebuild, so we can save this operation
     if (!permissionStore.getIsDynamicAddedRoute) {
       const routes = await permissionStore.buildRoutesAction();
       [...routes, PAGE_NOT_FOUND_ROUTE].forEach((route) => {
         router.addRoute(route as unknown as RouteRecordRaw);
       });
       // 记录动态路由加载完成
+      // TODO: This line its very weired...
       permissionStore.setDynamicAddedRoute(true);
 
       // 现在的to动态路由加载之前的，可能为PAGE_NOT_FOUND_ROUTE（例如，登陆后，刷新的时候）

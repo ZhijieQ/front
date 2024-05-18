@@ -3,6 +3,7 @@ import Inspector from 'vite-plugin-vue-inspector';
 
 export default defineApplicationConfig({
   overrides: {
+    base: './',
     optimizeDeps: {
       include: [
         'echarts/core',

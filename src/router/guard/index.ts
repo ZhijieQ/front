@@ -1,29 +1,30 @@
-import type { Router, RouteLocationNormalized } from 'vue-router';
-import { useAppStoreWithOut } from '@/store/modules/app';
-import { useUserStoreWithOut } from '@/store/modules/user';
+import type { Router } from 'vue-router';
+import { useAppStore } from '@/store/modules/app';
+import { useUserStore } from '@/store/modules/user';
 import { useTransitionSetting } from '@/hooks/setting/useTransitionSetting';
 import { AxiosCanceler } from '@/utils/http/axios/axiosCancel';
 import { Modal, notification } from 'ant-design-vue';
 import { warn } from '@/utils/log';
 import { unref } from 'vue';
-import { prefixCls } from '@/settings/designSetting';
+// import { prefixCls } from '@/settings/designSetting';
 import { setRouteChange } from '@/logics/mitt/routeChange';
 import { createPermissionGuard } from './permissionGuard';
 import { createStateGuard } from './stateGuard';
 import nProgress from 'nprogress';
 import projectSetting from '@/settings/projectSetting';
-import { createParamMenuGuard } from './paramMenuGuard';
+// import { createParamMenuGuard } from './paramMenuGuard';
 
 // Don't change the order of creation
 export function setupRouterGuard(router: Router) {
   createPageGuard(router);
   createPageLoadingGuard(router);
   createHttpGuard(router);
-  createScrollGuard(router);
+  // createScrollGuard(router);
   createMessageGuard(router);
   createProgressGuard(router);
   createPermissionGuard(router);
-  createParamMenuGuard(router); // must after createPermissionGuard (menu has been built.)
+  // This line may not necesary, the problem is createPermissionGuard, that reset dynamicAddedRoute
+  // createParamMenuGuard(router); // must after createPermissionGuard (menu has been built.)
   createStateGuard(router);
 }
 
@@ -49,8 +50,8 @@ function createPageGuard(router: Router) {
 
 // Used to handle page loading status
 function createPageLoadingGuard(router: Router) {
-  const userStore = useUserStoreWithOut();
-  const appStore = useAppStoreWithOut();
+  const userStore = useUserStore();
+  const appStore = useAppStore();
   const { getOpenPageLoading } = useTransitionSetting();
   router.beforeEach(async (to) => {
     if (!userStore.getToken) {
@@ -88,27 +89,28 @@ function createHttpGuard(router: Router) {
   let axiosCanceler: Nullable<AxiosCanceler>;
   if (removeAllHttpPending) {
     axiosCanceler = new AxiosCanceler();
+    router.beforeEach(async () => {
+      // Switching the route will delete the previous request
+      axiosCanceler?.removeAllPending();
+      return true;
+    });
   }
-  router.beforeEach(async () => {
-    // Switching the route will delete the previous request
-    axiosCanceler?.removeAllPending();
-    return true;
-  });
 }
 
+// Not necessary, because its always in the top. In another hand, hashHistory is change to webHistory, so /^#/ cant be match anymore
 // Routing switch back to the top
-function createScrollGuard(router: Router) {
-  const isHash = (href: string) => {
-    return /^#/.test(href);
-  };
+// function createScrollGuard(router: Router) {
+//   const isHash = (href: string) => {
+//     return /^#/.test(href);
+//   };
 
-  router.afterEach(async (to) => {
-    // scroll top
-    isHash((to as RouteLocationNormalized & { href: string })?.href) &&
-      document.querySelector(`.${prefixCls}-layout-content`)?.scrollTo(0, 0);
-    return true;
-  });
-}
+//   router.afterEach(async (to) => {
+//     // scroll top
+//     isHash((to as RouteLocationNormalized & { href: string })?.href) &&
+//       document.querySelector(`.${prefixCls}-layout-content`)?.scrollTo(0, 0);
+//     return true;
+//   });
+// }
 
 /**
  * Used to close the message instance when the route is switched

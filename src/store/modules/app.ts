@@ -8,10 +8,9 @@ import type {
 import type { BeforeMiniState, ApiAddress } from '#/store';
 
 import { defineStore } from 'pinia';
-import { store } from '@/store';
 
 import { ThemeEnum } from '@/enums/appEnum';
-import { APP_DARK_MODE_KEY, PROJ_CFG_KEY, API_ADDRESS } from '@/enums/cacheEnum';
+import { APP_DARK_MODE_KEY, API_ADDRESS } from '@/enums/cacheEnum';
 import { Persistent } from '@/utils/cache/persistent';
 import { darkMode } from '@/settings/designSetting';
 import { resetRouter } from '@/router';
@@ -32,7 +31,7 @@ export const useAppStore = defineStore({
   state: (): AppState => ({
     darkMode: undefined,
     pageLoading: false,
-    projectConfig: Persistent.getLocal(PROJ_CFG_KEY),
+    projectConfig: {} as ProjectConfig,
     beforeMiniInfo: {},
   }),
   getters: {
@@ -64,6 +63,7 @@ export const useAppStore = defineStore({
       return this.getProjectConfig.multiTabsSetting;
     },
     getApiAddress() {
+      // Not use
       return JSON.parse(localStorage.getItem(API_ADDRESS) || '{}');
     },
   },
@@ -83,11 +83,9 @@ export const useAppStore = defineStore({
 
     setProjectConfig(config: DeepPartial<ProjectConfig>): void {
       this.projectConfig = deepMerge(this.projectConfig || {}, config) as ProjectConfig;
-      Persistent.setLocal(PROJ_CFG_KEY, this.projectConfig);
     },
     setMenuSetting(setting: Partial<MenuSetting>): void {
       this.projectConfig!.menuSetting = deepMerge(this.projectConfig!.menuSetting, setting);
-      Persistent.setLocal(PROJ_CFG_KEY, this.projectConfig);
     },
 
     async resetAllState() {
@@ -110,9 +108,5 @@ export const useAppStore = defineStore({
       localStorage.setItem(API_ADDRESS, JSON.stringify(config));
     },
   },
+  persist: true,
 });
-
-// Need to be used outside the setup
-export function useAppStoreWithOut() {
-  return useAppStore(store);
-}

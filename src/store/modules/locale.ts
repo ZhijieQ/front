@@ -1,7 +1,6 @@
 import type { LocaleSetting, LocaleType } from '#/config';
 
 import { defineStore } from 'pinia';
-import { store } from '@/store';
 
 import { LOCALE_KEY } from '@/enums/cacheEnum';
 import { createLocalStorage } from '@/utils/cache';
@@ -48,8 +47,3 @@ export const useLocaleStore = defineStore({
     },
   },
 });
-
-// Need to be used outside the setup
-export function useLocaleStoreWithOut() {
-  return useLocaleStore(store);
-}

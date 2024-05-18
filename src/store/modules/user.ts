@@ -1,7 +1,6 @@
 import type { UserInfo } from '#/store';
 import type { ErrorMessageMode } from '#/axios';
 import { defineStore } from 'pinia';
-import { store } from '@/store';
 import { RoleEnum } from '@/enums/roleEnum';
 import { PageEnum } from '@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum';
@@ -23,6 +22,7 @@ interface UserState {
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
+  impersonation: Nullable<UserState>;
 }
 
 export const useUserStore = defineStore({
@@ -38,6 +38,7 @@ export const useUserStore = defineStore({
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
+    impersonation: null,
   }),
   getters: {
     getUserInfo(state): UserInfo {
@@ -54,6 +55,9 @@ export const useUserStore = defineStore({
     },
     getLastUpdateTime(state): number {
       return state.lastUpdateTime;
+    },
+    getImpersonation(state): Nullable<UserState> {
+      return state.impersonation;
     },
   },
   actions: {
@@ -73,11 +77,15 @@ export const useUserStore = defineStore({
     setSessionTimeout(flag: boolean) {
       this.sessionTimeout = flag;
     },
+    setImpersonation(impersonation: Nullable<UserState>) {
+      this.impersonation = impersonation;
+    },
     resetState() {
       this.userInfo = null;
       this.token = '';
       this.roleList = [];
       this.sessionTimeout = false;
+      this.impersonation = null;
     },
     /**
      * @description: login
@@ -185,8 +193,3 @@ export const useUserStore = defineStore({
     },
   },
 });
-
-// Need to be used outside the setup
-export function useUserStoreWithOut() {
-  return useUserStore(store);
-}

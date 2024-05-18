@@ -34,7 +34,7 @@
     "log": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "prepare": "husky install",
     "preview": "npm run build && vite preview",
-    "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
+    "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && npm run bootstrap && turbo run stub",
     "serve": "npm run dev",
     "test:gzip": "npx http-server dist --cors --gzip -c-1",
     "type:check": "vue-tsc --noEmit --skipLibCheck"

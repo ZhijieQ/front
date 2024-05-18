@@ -160,7 +160,7 @@ export interface GlobEnvConfig {
   // Upload url
   VITE_GLOB_UPLOAD_URL?: string;
   // AES key
-  AES_KEY: string;
+  VITE_GLOB_AES_KEY: string;
   // AES IV
-  AES_IV: string;
+  VITE_GLOB_AES_IV: string;
 }

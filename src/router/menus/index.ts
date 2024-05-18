@@ -1,7 +1,7 @@
 import type { Menu, MenuModule } from '@/router/types';
 import type { RouteRecordNormalized } from 'vue-router';
 
-import { useAppStoreWithOut } from '@/store/modules/app';
+import { useAppStore } from '@/store/modules/app';
 import { usePermissionStore } from '@/store/modules/permission';
 import { transformMenuModule, getAllParentPath } from '@/router/helper/menuHelper';
 import { filter } from '@/utils/helper/treeHelper';
@@ -10,12 +10,12 @@ import { router } from '@/router';
 import { PermissionModeEnum } from '@/enums/appEnum';
 import { pathToRegexp } from 'path-to-regexp';
 
-const modules = import.meta.glob('../routes/modules/**/*.ts', { eager: true });
+const modules = import.meta.glob('../routes/modules/**/*.ts', { eager: true }) as Recordable;
 
 const menuModules: MenuModule[] = [];
 
 Object.keys(modules).forEach((key) => {
-  const mod = (modules as Recordable)[key].default || {};
+  const mod = modules[key].default || {};
   const modList = Array.isArray(mod) ? [...mod] : [mod];
   menuModules.push(...modList);
 });
@@ -25,7 +25,7 @@ Object.keys(modules).forEach((key) => {
 // ===========================
 
 const getPermissionMode = () => {
-  const appStore = useAppStoreWithOut();
+  const appStore = useAppStore();
   return appStore.getProjectConfig.permissionMode;
 };
 const isBackMode = () => {

@@ -4,7 +4,7 @@
 import type { LocaleType } from '#/config';
 
 import { i18n } from './setupI18n';
-import { useLocaleStoreWithOut } from '@/store/modules/locale';
+import { useLocaleStore } from '@/store/modules/locale';
 import { unref, computed } from 'vue';
 import { loadLocalePool, setHtmlPageLang } from './helper';
 import { Locale } from 'ant-design-vue/es/locale';
@@ -16,7 +16,7 @@ interface LangModule {
 }
 
 function setI18nLanguage(locale: LocaleType) {
-  const localeStore = useLocaleStoreWithOut();
+  const localeStore = useLocaleStore();
 
   if (i18n.mode === 'legacy') {
     i18n.global.locale = locale;
@@ -28,7 +28,7 @@ function setI18nLanguage(locale: LocaleType) {
 }
 
 export function useLocale() {
-  const localeStore = useLocaleStoreWithOut();
+  const localeStore = useLocaleStore();
   const getLocale = computed(() => localeStore.getLocale);
   const getShowLocalePicker = computed(() => localeStore.getShowPicker);
 

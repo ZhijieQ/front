@@ -13,7 +13,7 @@ import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/enums/httpEnum';
 import { isString, isUndefined, isNull, isEmpty } from '@/utils/is';
 import { getToken } from '@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '@/utils';
-import { useErrorLogStoreWithOut } from '@/store/modules/errorLog';
+import { useErrorLogStore } from '@/store/modules/errorLog';
 import { useI18n } from '@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { useUserStore } from '@/store/modules/user';
@@ -177,7 +177,7 @@ const transform: AxiosTransform = {
    */
   responseInterceptorsCatch: (axiosInstance: AxiosInstance, error: any) => {
     const { t } = useI18n();
-    const errorLogStore = useErrorLogStoreWithOut();
+    const errorLogStore = useErrorLogStore();
     errorLogStore.addAjaxErrorInfo(error);
     const { response, code, message, config } = error || {};
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';

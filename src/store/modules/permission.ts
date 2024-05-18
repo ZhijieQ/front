@@ -1,10 +1,9 @@
 import type { AppRouteRecordRaw, Menu } from '@/router/types';
 
 import { defineStore } from 'pinia';
-import { store } from '@/store';
 import { useI18n } from '@/hooks/web/useI18n';
 import { useUserStore } from './user';
-import { useAppStoreWithOut } from './app';
+import { useAppStore } from './app';
 import { toRaw } from 'vue';
 import { transformObjToRoute, flatMultiLevelRoutes } from '@/router/helper/routeHelper';
 import { transformRouteToMenu } from '@/router/helper/menuHelper';
@@ -104,6 +103,7 @@ export const usePermissionStore = defineStore({
       this.lastBuildMenuTime = 0;
     },
     async changePermissionCode() {
+      // TODO: permision change
       const codeList = await getPermCode();
       this.setPermCodeList(codeList);
     },
@@ -112,13 +112,14 @@ export const usePermissionStore = defineStore({
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       const { t } = useI18n();
       const userStore = useUserStore();
-      const appStore = useAppStoreWithOut();
+      const appStore = useAppStore();
 
       let routes: AppRouteRecordRaw[] = [];
       const roleList = toRaw(userStore.getRoleList) || [];
       const { permissionMode = projectSetting.permissionMode } = appStore.getProjectConfig;
 
       // 路由过滤器 在 函数filter 作为回调传入遍历使用
+      // TODO: change this, the role should be dinamic
       const routeFilter = (route: AppRouteRecordRaw) => {
         const { meta } = route;
         // 抽出角色
@@ -168,6 +169,8 @@ export const usePermissionStore = defineStore({
         return;
       };
 
+      // TODO: create a new permissionMode base en RoleBase
+      // Its like using ROUTE_MAPPING but the role is auto fill by back
       switch (permissionMode) {
         // 角色权限
         case PermissionModeEnum.ROLE:
@@ -252,9 +255,3 @@ export const usePermissionStore = defineStore({
     },
   },
 });
-
-// Need to be used outside the setup
-// 需要在设置之外使用
-export function usePermissionStoreWithOut() {
-  return usePermissionStore(store);
-}
