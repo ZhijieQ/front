@@ -3,21 +3,16 @@ import type { ErrorMessageMode } from '#/axios';
 import { defineStore } from 'pinia';
 import { RoleEnum } from '@/enums/roleEnum';
 import { PageEnum } from '@/enums/pageEnum';
-//import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum';
-// import { getAuthCache, setAuthCache } from '@/utils/auth';
 import { GetUserInfoModel, LoginParams } from '@/api/sys/model/userModel';
 import { doLogout, getUserInfo, loginApi } from '@/api/sys/user';
 import { useI18n } from '@/hooks/web/useI18n';
 import { useMessage } from '@/hooks/web/useMessage';
 import { router } from '@/router';
-// import { usePermissionStore } from '@/store/modules/permission';
 
 import { RouteRecordRaw } from 'vue-router';
-// import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
 import { isArray } from '@/utils/is';
 import { h } from 'vue';
 import { useRouteStore } from '@/store/modules/route';
-// import { usePermissionStore } from './permission';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -67,16 +62,13 @@ export const useUserStore = defineStore({
   actions: {
     setToken(info: string | undefined) {
       this.token = info;
-      //setAuthCache(TOKEN_KEY, info);
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList;
-      //setAuthCache(ROLES_KEY, roleList);
     },
     setUserInfo(info: UserInfo | null) {
       this.userInfo = info;
       //this.lastUpdateTime = new Date().getTime();
-      //setAuthCache(USER_INFO_KEY, info);
     },
     setLastUpdateTime(date: Date) {
       this.lastUpdateTime = date.getTime();
@@ -130,24 +122,7 @@ export const useUserStore = defineStore({
         router.addRoute(route as unknown as RouteRecordRaw);
       });
       goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
-      // const sessionTimeout = this.sessionTimeout;
-      // if (sessionTimeout) {
-      //   this.setSessionTimeout(false);
-      // } else {
-      //   const permissionStore = usePermissionStore();
 
-      //   // 动态路由加载（首次）
-      //   if (!permissionStore.isDynamicAddedRoute) {
-      //     const routes = await permissionStore.buildRoutesAction();
-      //     [...routes].forEach((route) => {
-      //       router.addRoute(route as unknown as RouteRecordRaw);
-      //     });
-      //     // 记录动态路由加载完成
-      //     permissionStore.setDynamicAddedRoute(true);
-      //   }
-
-      //   goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
-      // }
       return userInfo;
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
@@ -159,15 +134,6 @@ export const useUserStore = defineStore({
       } else {
         this.setRoleList([]);
       }
-
-      // const routeStore = useRouteStore();
-      // if (isArray(bitControls)) {
-      //   routeStore.setBitControls(
-      //     bitControls.map((item) => [item[0], item[1] << 16]) as Array<number[]>,
-      //   );
-      // } else {
-      //   routeStore.setBitControls([]);
-      // }
 
       this.setUserInfo(userInfo);
       return userInfo;

@@ -6,25 +6,20 @@ import { AxiosCanceler } from '@/utils/http/axios/axiosCancel';
 import { Modal, notification } from 'ant-design-vue';
 import { warn } from '@/utils/log';
 import { unref } from 'vue';
-// import { prefixCls } from '@/settings/designSetting';
 import { setRouteChange } from '@/logics/mitt/routeChange';
 import { createPermissionGuard } from './permissionGuard';
 import { createStateGuard } from './stateGuard';
 import nProgress from 'nprogress';
 import projectSetting from '@/settings/projectSetting';
-// import { createParamMenuGuard } from './paramMenuGuard';
 
 // Don't change the order of creation
 export function setupRouterGuard(router: Router) {
   createPageGuard(router);
   createPageLoadingGuard(router);
   createHttpGuard(router);
-  // createScrollGuard(router);
   createMessageGuard(router);
   createProgressGuard(router);
   createPermissionGuard(router);
-  // This line may not necesary, the problem is createPermissionGuard, that reset dynamicAddedRoute
-  // createParamMenuGuard(router); // must after createPermissionGuard (menu has been built.)
   createStateGuard(router);
 }
 
@@ -96,21 +91,6 @@ function createHttpGuard(router: Router) {
     });
   }
 }
-
-// Not necessary, because its always in the top. In another hand, hashHistory is change to webHistory, so /^#/ cant be match anymore
-// Routing switch back to the top
-// function createScrollGuard(router: Router) {
-//   const isHash = (href: string) => {
-//     return /^#/.test(href);
-//   };
-
-//   router.afterEach(async (to) => {
-//     // scroll top
-//     isHash((to as RouteLocationNormalized & { href: string })?.href) &&
-//       document.querySelector(`.${prefixCls}-layout-content`)?.scrollTo(0, 0);
-//     return true;
-//   });
-// }
 
 /**
  * Used to close the message instance when the route is switched

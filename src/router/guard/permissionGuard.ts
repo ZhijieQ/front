@@ -1,15 +1,10 @@
 import type { RouteLocationNormalized, Router } from 'vue-router';
 
-//import { usePermissionStore } from '@/store/modules/permission';
-
 import { PageEnum } from '@/enums/pageEnum';
 import { useUserStore } from '@/store/modules/user';
 
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
-// import { usePermissionStore } from '@/store/modules/permission';
 import { useRouteStore } from '@/store/modules/route';
-
-// import { RootRoute } from '@/router/routes';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 
@@ -38,25 +33,8 @@ export function createPermissionGuard(router: Router) {
   const routeStore = useRouteStore();
 
   router.beforeEach(async (to, from, next) => {
-    // if (
-    //   from.path === ROOT_PATH &&
-    //   to.path === PageEnum.BASE_HOME &&
-    //   userStore.getUserInfo?.homePath &&
-    //   userStore.getUserInfo.homePath !== PageEnum.BASE_HOME
-    // ) {
-    //   next(userStore.getUserInfo.homePath);
-    //   return;
-    // }
-    // if(to.matched.length === 0){
-    //   next({name: PAGE_NOT_FOUND_ROUTE.name});
-    //   return;
-    // }
-
     const token = userStore.getToken;
     if (routeStore.getReload === true && !userStore.getSessionTimeout && token) {
-      // routeStore.getRoutes.forEach((route) => {
-      //   router.addRoute(route as unknown as RouteRecordRaw);
-      // });
       await userStore.afterLoginAction();
       routeStore.setReload(false);
       next({ path: to.fullPath, replace: false, query: to.query });
@@ -102,29 +80,6 @@ export function createPermissionGuard(router: Router) {
         return;
       }
     }
-
-    // 动态路由加载（首次）
-    // After call location.realod(), all app will be rebuild, so we can save this operation
-    // if (!permissionStore.getIsDynamicAddedRoute) {
-    //   const routes = await permissionStore.buildRoutesAction();
-    //   [...routes].forEach((route) => {
-    //     router.addRoute(route as unknown as RouteRecordRaw);
-    //   });
-    //   // 记录动态路由加载完成
-    //   // This line its very weired...
-    //   permissionStore.setDynamicAddedRoute(true);
-
-    //   // 现在的to动态路由加载之前的，可能为PAGE_NOT_FOUND_ROUTE（例如，登陆后，刷新的时候）
-    //   // 此处应当重定向到fullPath，否则会加载404页面内容
-    //   next({ path: to.fullPath, replace: true, query: to.query });
-    //   return;
-    // }
-
-    // if (permissionStore.getIsDynamicAddedRoute) {
-    //   permissionStore.setDynamicAddedRoute(true);
-    //   next({ path: to.fullPath, replace: true, query: to.query });
-    //   return;
-    // }
 
     if (to.name === PAGE_NOT_FOUND_ROUTE.name) {
       // 遇到不存在页面，后续逻辑不再处理redirect（阻止下面else逻辑）

@@ -7,7 +7,6 @@ import { useUserStore } from '@/store/modules/user';
 import { useTabs } from './useTabs';
 
 import { router, resetRouter } from '@/router';
-// import { RootRoute } from '@/router/routes';
 
 import projectSetting from '@/settings/projectSetting';
 import { PermissionModeEnum } from '@/enums/appEnum';

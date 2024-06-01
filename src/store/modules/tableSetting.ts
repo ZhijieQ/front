@@ -1,9 +1,5 @@
 import { defineStore } from 'pinia';
 
-// import { TABLE_SETTING_KEY } from '@/enums/cacheEnum';
-
-// import { Persistent } from '@/utils/cache/persistent';
-
 import type { TableSetting } from '#/store';
 import type { SizeType, ColumnOptionsType } from '@/components/Table/src/types/table';
 

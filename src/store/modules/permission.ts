@@ -22,7 +22,6 @@ import { getPermCode } from '@/api/sys/user';
 
 import { useMessage } from '@/hooks/web/useMessage';
 import { PageEnum } from '@/enums/pageEnum';
-//import { customSerializer } from '../plugin/persist';
 
 interface PermissionState {
   // Permission code list

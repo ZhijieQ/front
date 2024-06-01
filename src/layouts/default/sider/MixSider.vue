@@ -93,7 +93,6 @@
   import Icon from '@/components/Icon/Icon.vue';
   import { AppLogo } from '@/components/Application';
   import { useMenuSetting } from '@/hooks/setting/useMenuSetting';
-  // import { usePermissionStore } from '@/store/modules/permission';
   import { useDragLine } from './useLayoutSider';
   import { useGlobSetting } from '@/hooks/setting';
   import { useDesign } from '@/hooks/web/useDesign';
@@ -139,7 +138,6 @@
   } = useMenuSetting();
 
   const { title } = useGlobSetting();
-  // const permissionStore = usePermissionStore();
   const routeStore = useRouteStore();
 
   useDragLine(sideRef, dragBarRef, true);
