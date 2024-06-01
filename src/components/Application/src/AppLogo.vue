@@ -54,7 +54,7 @@
   ]);
 
   function goHome() {
-    go(userStore.getUserInfo.homePath || PageEnum.BASE_HOME);
+    go(userStore.getUserInfo?.homePath || PageEnum.BASE_HOME);
   }
 </script>
 <style lang="less" scoped>

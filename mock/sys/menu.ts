@@ -7,7 +7,7 @@ const dashboardRoute = {
   path: '/dashboard',
   name: 'Dashboard',
   component: 'LAYOUT',
-  redirect: '/dashboard/analysis',
+  redirect: '/dev/dashboard/analysis',
   meta: {
     title: 'routes.dashboard.dashboard',
     hideChildrenInMenu: true,
@@ -72,7 +72,7 @@ const authRoute = {
   path: '/permission',
   name: 'Permission',
   component: 'LAYOUT',
-  redirect: '/permission/front/page',
+  redirect: '/dev/permission/front/page',
   meta: {
     icon: 'carbon:user-role',
     title: 'routes.demo.permission.permission',
@@ -84,7 +84,7 @@ const levelRoute = {
   path: '/level',
   name: 'Level',
   component: 'LAYOUT',
-  redirect: '/level/menu1/menu1-1',
+  redirect: '/dev/level/menu1/menu1-1',
   meta: {
     icon: 'carbon:user-role',
     title: 'routes.demo.level.level',
@@ -140,7 +140,7 @@ const sysRoute = {
   path: '/system',
   name: 'System',
   component: 'LAYOUT',
-  redirect: '/system/account',
+  redirect: '/dev/system/account',
   meta: {
     icon: 'ion:settings-outline',
     title: 'routes.demo.system.moduleName',

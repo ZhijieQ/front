@@ -3,3 +3,6 @@ add_remote:
 
 pull:
 	git pull origin main --allow-unrelated-histories
+
+cmt:
+	pnpm commit
