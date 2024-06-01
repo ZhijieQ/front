@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 
-import { TABLE_SETTING_KEY } from '@/enums/cacheEnum';
+// import { TABLE_SETTING_KEY } from '@/enums/cacheEnum';
 
-import { Persistent } from '@/utils/cache/persistent';
+// import { Persistent } from '@/utils/cache/persistent';
 
 import type { TableSetting } from '#/store';
 import type { SizeType, ColumnOptionsType } from '@/components/Table/src/types/table';
@@ -13,8 +13,9 @@ interface TableSettingState {
 
 export const useTableSettingStore = defineStore({
   id: 'table-setting',
+  persist: true,
   state: (): TableSettingState => ({
-    setting: Persistent.getLocal(TABLE_SETTING_KEY),
+    setting: null,
   }),
   getters: {
     getTableSetting(state): Nullable<Partial<TableSetting>> {
@@ -48,10 +49,10 @@ export const useTableSettingStore = defineStore({
   actions: {
     setTableSetting(setting: Partial<TableSetting>) {
       this.setting = Object.assign({}, this.setting, setting);
-      Persistent.setLocal(TABLE_SETTING_KEY, this.setting, true);
+      //Persistent.setLocal(TABLE_SETTING_KEY, this.setting, true);
     },
     resetTableSetting() {
-      Persistent.removeLocal(TABLE_SETTING_KEY, true);
+      //Persistent.removeLocal(TABLE_SETTING_KEY, true);
       this.setting = null;
     },
     //

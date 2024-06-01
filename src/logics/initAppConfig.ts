@@ -10,16 +10,16 @@ import { updateColorWeak } from '@/logics/theme/updateColorWeak';
 import { updateGrayMode } from '@/logics/theme/updateGrayMode';
 
 import { useAppStore } from '@/store/modules/app';
-import { useLocaleStore } from '@/store/modules/locale';
+//import { useLocaleStore } from '@/store/modules/locale';
 
-import { getCommonStoragePrefix, getStorageShortName } from '@/utils/env';
+//import { getCommonStoragePrefix, getStorageShortName } from '@/utils/env';
 
 import { ThemeEnum } from '@/enums/appEnum';
 import { deepMerge } from '@/utils';
 
 // Initial project configuration
 export function initAppConfigStore() {
-  const localeStore = useLocaleStore();
+  //const localeStore = useLocaleStore();
   const appStore = useAppStore();
   let projCfg = appStore.getProjectConfig;
   projCfg = deepMerge(projectSetting, projCfg || {});
@@ -49,18 +49,18 @@ export function initAppConfigStore() {
     bgColor && updateSidebarBgColor(bgColor);
   }
   // init store
-  localeStore.initLocale();
+  //localeStore.initLocale();
 
-  setTimeout(() => {
+  /*setTimeout(() => {
     clearObsoleteStorage();
-  }, 16);
+  }, 16);*/
 }
 
 /**
  * As the version continues to iterate, there will be more and more cache keys stored in localStorage.
  * This method is used to delete useless keys
  */
-export function clearObsoleteStorage() {
+/*function clearObsoleteStorage() {
   const commonPrefix = getCommonStoragePrefix();
   const shortPrefix = getStorageShortName();
 
@@ -71,4 +71,4 @@ export function clearObsoleteStorage() {
       }
     });
   });
-}
+}*/

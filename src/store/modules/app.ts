@@ -10,14 +10,14 @@ import type { BeforeMiniState, ApiAddress } from '#/store';
 import { defineStore } from 'pinia';
 
 import { ThemeEnum } from '@/enums/appEnum';
-import { APP_DARK_MODE_KEY, API_ADDRESS } from '@/enums/cacheEnum';
+import { API_ADDRESS } from '@/enums/cacheEnum';
 import { Persistent } from '@/utils/cache/persistent';
 import { darkMode } from '@/settings/designSetting';
 import { resetRouter } from '@/router';
 import { deepMerge } from '@/utils';
 
 interface AppState {
-  darkMode?: ThemeEnum;
+  darkMode: ThemeEnum;
   // Page loading status
   pageLoading: boolean;
   // project config
@@ -28,8 +28,11 @@ interface AppState {
 let timeId: TimeoutHandle;
 export const useAppStore = defineStore({
   id: 'app',
+  persist: {
+    paths: ['darkMode', 'projectConfig'],
+  },
   state: (): AppState => ({
-    darkMode: undefined,
+    darkMode: darkMode,
     pageLoading: false,
     projectConfig: {} as ProjectConfig,
     beforeMiniInfo: {},
@@ -39,7 +42,7 @@ export const useAppStore = defineStore({
       return state.pageLoading;
     },
     getDarkMode(state): 'light' | 'dark' | string {
-      return state.darkMode || localStorage.getItem(APP_DARK_MODE_KEY) || darkMode;
+      return state.darkMode;
     },
 
     getBeforeMiniInfo(state): BeforeMiniState {
@@ -74,7 +77,7 @@ export const useAppStore = defineStore({
 
     setDarkMode(mode: ThemeEnum): void {
       this.darkMode = mode;
-      localStorage.setItem(APP_DARK_MODE_KEY, mode);
+      // localStorage.setItem(APP_DARK_MODE_KEY, mode);
     },
 
     setBeforeMiniInfo(state: BeforeMiniState): void {
@@ -108,5 +111,4 @@ export const useAppStore = defineStore({
       localStorage.setItem(API_ADDRESS, JSON.stringify(config));
     },
   },
-  persist: true,
 });

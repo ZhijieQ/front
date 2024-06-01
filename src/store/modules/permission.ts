@@ -22,6 +22,7 @@ import { getPermCode } from '@/api/sys/user';
 
 import { useMessage } from '@/hooks/web/useMessage';
 import { PageEnum } from '@/enums/pageEnum';
+//import { customSerializer } from '../plugin/persist';
 
 interface PermissionState {
   // Permission code list
@@ -42,6 +43,7 @@ interface PermissionState {
 
 export const usePermissionStore = defineStore({
   id: 'app-permission',
+  // persist: { storage: localStorage, serializer: customSerializer() },
   state: (): PermissionState => ({
     // 权限代码列表
     permCodeList: [],
@@ -142,7 +144,7 @@ export const usePermissionStore = defineStore({
        * */
       const patchHomeAffix = (routes: AppRouteRecordRaw[]) => {
         if (!routes || routes.length === 0) return;
-        let homePath: string = userStore.getUserInfo.homePath || PageEnum.BASE_HOME;
+        let homePath: string = userStore.getUserInfo?.homePath || PageEnum.BASE_HOME;
 
         function patcher(routes: AppRouteRecordRaw[], parentPath = '') {
           if (parentPath) parentPath = parentPath + '/';
@@ -245,11 +247,10 @@ export const usePermissionStore = defineStore({
           routeList = routeList.filter(routeRemoveIgnoreFilter);
 
           routeList = flatMultiLevelRoutes(routeList);
-          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
           break;
       }
 
-      routes.push(ERROR_LOG_ROUTE);
+      routes.push(ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE);
       patchHomeAffix(routes);
       return routes;
     },

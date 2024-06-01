@@ -6,12 +6,12 @@
  */
 import type { Pinia } from 'pinia';
 import { createPersistedState, Serializer } from 'pinia-plugin-persistedstate';
-import type { PersistedStateFactoryOptions } from 'pinia-plugin-persistedstate';
-import { getCommonStoragePrefix } from '@/utils/env';
+//import type { PersistedStateFactoryOptions } from 'pinia-plugin-persistedstate';
+//import { getCommonStoragePrefix } from '@/utils/env';
 import { Encryption, EncryptionFactory } from '@/utils/cipher';
 import { cacheCipher, SHOULD_ENABLE_STORAGE_ENCRYPTION } from '@/settings/encryptionSetting';
 
-export const PERSIST_KEY_PREFIX = getCommonStoragePrefix();
+//export const PERSIST_KEY_PREFIX = getCommonStoragePrefix();
 
 const persistEncryption: Encryption = EncryptionFactory.createAesEncryption({
   key: cacheCipher.key,
@@ -25,8 +25,8 @@ const persistEncryption: Encryption = EncryptionFactory.createAesEncryption({
  * @param shouldEnableEncryption whether to enable encryption for storage data 是否启用存储数据加密
  * @returns serializer
  */
-function customSerializer(shouldEnableEncryption: boolean): Serializer {
-  if (shouldEnableEncryption) {
+export function customSerializer(): Serializer {
+  if (SHOULD_ENABLE_STORAGE_ENCRYPTION) {
     return {
       deserialize: (value) => {
         const decrypted = persistEncryption.decrypt(value);
@@ -39,12 +39,8 @@ function customSerializer(shouldEnableEncryption: boolean): Serializer {
     };
   } else {
     return {
-      deserialize: (value) => {
-        return JSON.parse(value);
-      },
-      serialize: (value) => {
-        return JSON.stringify(value);
-      },
+      deserialize: JSON.parse,
+      serialize: JSON.stringify,
     };
   }
 }
@@ -56,7 +52,7 @@ function customSerializer(shouldEnableEncryption: boolean): Serializer {
  * @param pinia Pinia instance Pinia 实例
  */
 export function registerPiniaPersistPlugin(pinia: Pinia) {
-  pinia.use(createPersistedState(createPersistedStateOptions(PERSIST_KEY_PREFIX)));
+  pinia.use(createPersistedState({ storage: localStorage, serializer: customSerializer() }));
 }
 
 /**
@@ -66,10 +62,10 @@ export function registerPiniaPersistPlugin(pinia: Pinia) {
  * @param keyPrefix prefix for storage key 储存键前缀
  * @returns persisted state factory options
  */
-export function createPersistedStateOptions(keyPrefix: string): PersistedStateFactoryOptions {
+/*export function createPersistedStateOptions(keyPrefix: string): PersistedStateFactoryOptions {
   return {
     storage: localStorage,
     key: (id) => `${keyPrefix}__${id}`,
-    serializer: customSerializer(SHOULD_ENABLE_STORAGE_ENCRYPTION),
+    serializer: customSerializer(),
   };
-}
+}*/

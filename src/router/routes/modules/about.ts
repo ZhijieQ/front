@@ -1,4 +1,5 @@
 import type { AppRouteModule } from '@/router/types';
+import { BaseControl } from '@/permissions';
 
 import { LAYOUT } from '@/router/constant';
 import { t } from '@/hooks/web/useI18n';
@@ -13,6 +14,7 @@ const about: AppRouteModule = {
     icon: 'simple-icons:aboutdotme',
     title: t('routes.dashboard.about'),
     orderNo: 100000,
+    permissions: BaseControl.PermissionTableRead | BaseControl.PermissionTableWrite,
   },
   children: [
     {

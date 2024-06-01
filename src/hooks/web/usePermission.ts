@@ -16,12 +16,14 @@ import { RoleEnum } from '@/enums/roleEnum';
 import { intersection } from 'lodash-es';
 import { isArray } from '@/utils/is';
 import { useMultipleTabStore } from '@/store/modules/multipleTab';
+import { useRouteStore } from '@/store/modules/route';
 
 // User permissions related operations
 export function usePermission() {
   const userStore = useUserStore();
   const appStore = useAppStore();
   const permissionStore = usePermissionStore();
+  const routeStore = useRouteStore();
   const { closeAll } = useTabs(router);
 
   /**
@@ -47,12 +49,12 @@ export function usePermission() {
     resetRouter();
 
     // 动态加载路由（再次）
-    const routes = await permissionStore.buildRoutesAction();
+    const routes = await routeStore.buildRoutesAction();
     routes.forEach((route) => {
       router.addRoute(route as unknown as RouteRecordRaw);
     });
 
-    permissionStore.setLastBuildMenuTime();
+    routeStore.setLastBuildMenuTime();
     closeAll();
   }
 

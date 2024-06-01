@@ -1,6 +1,7 @@
 import type { AppRouteModule } from '@/router/types';
 
 import { LAYOUT } from '@/router/constant';
+import { BaseControl } from '@/permissions';
 
 const permission: AppRouteModule = {
   path: '/form-designer',
@@ -17,6 +18,7 @@ const permission: AppRouteModule = {
       name: 'Design',
       meta: {
         title: '表单设计',
+        permissions: BaseControl.PermissionTableWrite,
       },
       component: () => import('@/views/form-design/index.vue'),
     },

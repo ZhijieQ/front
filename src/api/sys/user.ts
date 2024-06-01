@@ -8,6 +8,7 @@ enum Api {
   Logout = '/logout',
   GetUserInfo = '/getUserInfo',
   GetPermCode = '/getPermCode',
+  GetBitControl = '/getBitControl',
   TestRetry = '/testRetry',
 }
 
@@ -35,6 +36,10 @@ export function getUserInfo() {
 
 export function getPermCode() {
   return defHttp.get<string[]>({ url: Api.GetPermCode });
+}
+
+export function getBitControl() {
+  return defHttp.get<number[]>({ url: Api.GetBitControl });
 }
 
 export function doLogout() {

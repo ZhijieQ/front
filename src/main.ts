@@ -41,7 +41,7 @@ async function bootstrap() {
 
   // Configure routing
   // 配置路由
-  setupRouter(app);
+  await setupRouter(app);
 
   // router-guard
   // 路由守卫

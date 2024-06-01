@@ -11,7 +11,7 @@ import { useGlobSetting } from '@/hooks/setting';
 import { useMessage } from '@/hooks/web/useMessage';
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/enums/httpEnum';
 import { isString, isUndefined, isNull, isEmpty } from '@/utils/is';
-import { getToken } from '@/utils/auth';
+//import { getToken } from '@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '@/utils';
 import { useErrorLogStore } from '@/store/modules/errorLog';
 import { useI18n } from '@/hooks/web/useI18n';
@@ -154,8 +154,10 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
+    const userStore = useUserStore();
     // 请求之前处理config
-    const token = getToken();
+    const token = userStore.getToken;
+    // const token = 'fakeToken1';
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
       (config as Recordable).headers.Authorization = options.authenticationScheme

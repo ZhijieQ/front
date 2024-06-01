@@ -43,6 +43,13 @@ const fakeCodeList: any = {
 
   '2': ['2000', '4000', '6000'],
 };
+
+const fakeBitControls: any = {
+  '1': [(0b0000000000000001 << 16) | (0b0000000000000010 << 16) | 1],
+
+  '2': [(0b0000000000000001 << 16) | 1],
+};
+
 export default [
   // mock user login
   {
@@ -74,6 +81,7 @@ export default [
     response: (request: requestParams) => {
       const token = getRequestToken(request);
       if (!token) return resultError('Invalid token');
+
       const checkUser = createFakeUserList().find((item) => item.token === token);
       if (!checkUser) {
         return resultError('The corresponding user information was not obtained!');
@@ -93,6 +101,22 @@ export default [
         return resultError('Invalid token!');
       }
       const codeList = fakeCodeList[checkUser.userId];
+
+      return resultSuccess(codeList);
+    },
+  },
+  {
+    url: '/basic-api/getBitControl',
+    timeout: 200,
+    method: 'get',
+    response: (request: requestParams) => {
+      const token = getRequestToken(request);
+      if (!token) return resultError('Invalid token');
+      const checkUser = createFakeUserList().find((item) => item.token === token);
+      if (!checkUser) {
+        return resultError('Invalid token!');
+      }
+      const codeList = fakeBitControls[checkUser.userId];
 
       return resultSuccess(codeList);
     },

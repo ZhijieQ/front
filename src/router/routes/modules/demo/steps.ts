@@ -2,6 +2,7 @@ import type { AppRouteModule } from '@/router/types';
 
 import { LAYOUT } from '@/router/constant';
 import { t } from '@/hooks/web/useI18n';
+import { BaseControl } from '@/permissions';
 
 const steps: AppRouteModule = {
   path: '/steps',
@@ -13,6 +14,7 @@ const steps: AppRouteModule = {
     hideChildrenInMenu: true,
     icon: 'whh:paintroll',
     title: t('routes.demo.steps.page'),
+    permissions: BaseControl.PermissionTableRead,
   },
   children: [
     {

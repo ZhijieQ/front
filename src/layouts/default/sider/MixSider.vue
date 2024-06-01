@@ -93,7 +93,7 @@
   import Icon from '@/components/Icon/Icon.vue';
   import { AppLogo } from '@/components/Application';
   import { useMenuSetting } from '@/hooks/setting/useMenuSetting';
-  import { usePermissionStore } from '@/store/modules/permission';
+  // import { usePermissionStore } from '@/store/modules/permission';
   import { useDragLine } from './useLayoutSider';
   import { useGlobSetting } from '@/hooks/setting';
   import { useDesign } from '@/hooks/web/useDesign';
@@ -105,6 +105,7 @@
   import { listenerRouteChange } from '@/logics/mitt/routeChange';
   import LayoutTrigger from '../trigger/index.vue';
   import { createAsyncComponent } from '@/utils/factory/createAsyncComponent';
+  import { useRouteStore } from '@/store/modules/route';
 
   const SimpleMenuTag = createAsyncComponent(
     () => import('@/components/SimpleMenu/src/SimpleMenuTag.vue'),
@@ -138,7 +139,8 @@
   } = useMenuSetting();
 
   const { title } = useGlobSetting();
-  const permissionStore = usePermissionStore();
+  // const permissionStore = usePermissionStore();
+  const routeStore = useRouteStore();
 
   useDragLine(sideRef, dragBarRef, true);
 
@@ -194,7 +196,8 @@
 
   // Menu changes
   watch(
-    [() => permissionStore.getLastBuildMenuTime, () => permissionStore.getBackMenuList],
+    // [() => permissionStore.getLastBuildMenuTime, () => permissionStore.getBackMenuList],
+    () => routeStore.getLastBuildMenuTime,
     async () => {
       menuModules.value = await getShallowMenus();
     },

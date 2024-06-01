@@ -37,6 +37,6 @@ export function resetRouter() {
 
 // config router
 // 配置路由器
-export function setupRouter(app: App<Element>) {
+export async function setupRouter(app: App<Element>) {
   app.use(router);
 }

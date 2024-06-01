@@ -38,6 +38,9 @@ export enum PermissionModeEnum {
   // route mapping
   // 路由映射
   ROUTE_MAPPING = 'ROUTE_MAPPING',
+
+  // bit control
+  BIT_CONTROL = 'BIT_CONTROL',
 }
 
 // Route switching animation

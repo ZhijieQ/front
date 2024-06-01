@@ -3,22 +3,25 @@ import type { ErrorMessageMode } from '#/axios';
 import { defineStore } from 'pinia';
 import { RoleEnum } from '@/enums/roleEnum';
 import { PageEnum } from '@/enums/pageEnum';
-import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum';
-import { getAuthCache, setAuthCache } from '@/utils/auth';
+//import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum';
+// import { getAuthCache, setAuthCache } from '@/utils/auth';
 import { GetUserInfoModel, LoginParams } from '@/api/sys/model/userModel';
 import { doLogout, getUserInfo, loginApi } from '@/api/sys/user';
 import { useI18n } from '@/hooks/web/useI18n';
 import { useMessage } from '@/hooks/web/useMessage';
 import { router } from '@/router';
-import { usePermissionStore } from '@/store/modules/permission';
+// import { usePermissionStore } from '@/store/modules/permission';
+
 import { RouteRecordRaw } from 'vue-router';
-import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
+// import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
 import { isArray } from '@/utils/is';
 import { h } from 'vue';
+import { useRouteStore } from '@/store/modules/route';
+// import { usePermissionStore } from './permission';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
-  token?: string;
+  token?: string | undefined;
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
@@ -27,6 +30,7 @@ interface UserState {
 
 export const useUserStore = defineStore({
   id: 'app-user',
+  persist: true,
   state: (): UserState => ({
     // user info
     userInfo: null,
@@ -41,14 +45,14 @@ export const useUserStore = defineStore({
     impersonation: null,
   }),
   getters: {
-    getUserInfo(state): UserInfo {
-      return state.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
+    getUserInfo(state): Nullable<UserInfo> {
+      return state.userInfo;
     },
-    getToken(state): string {
-      return state.token || getAuthCache<string>(TOKEN_KEY);
+    getToken(state): string | undefined {
+      return state.token;
     },
     getRoleList(state): RoleEnum[] {
-      return state.roleList.length > 0 ? state.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
+      return state.roleList;
     },
     getSessionTimeout(state): boolean {
       return !!state.sessionTimeout;
@@ -62,24 +66,29 @@ export const useUserStore = defineStore({
   },
   actions: {
     setToken(info: string | undefined) {
-      this.token = info ? info : ''; // for null or undefined value
-      setAuthCache(TOKEN_KEY, info);
+      this.token = info;
+      //setAuthCache(TOKEN_KEY, info);
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList;
-      setAuthCache(ROLES_KEY, roleList);
+      //setAuthCache(ROLES_KEY, roleList);
     },
     setUserInfo(info: UserInfo | null) {
       this.userInfo = info;
-      this.lastUpdateTime = new Date().getTime();
-      setAuthCache(USER_INFO_KEY, info);
+      //this.lastUpdateTime = new Date().getTime();
+      //setAuthCache(USER_INFO_KEY, info);
+    },
+    setLastUpdateTime(date: Date) {
+      this.lastUpdateTime = date.getTime();
     },
     setSessionTimeout(flag: boolean) {
       this.sessionTimeout = flag;
     },
+
     setImpersonation(impersonation: Nullable<UserState>) {
       this.impersonation = impersonation;
     },
+
     resetState() {
       this.userInfo = null;
       this.token = '';
@@ -109,28 +118,36 @@ export const useUserStore = defineStore({
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+      // TODO: set new sessionOut
       if (!this.getToken) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
 
-      const sessionTimeout = this.sessionTimeout;
-      if (sessionTimeout) {
-        this.setSessionTimeout(false);
-      } else {
-        const permissionStore = usePermissionStore();
+      const routeStore = useRouteStore();
+      this.setSessionTimeout(false);
+      const routes = await routeStore.buildRoutesAction();
+      routes.forEach((route) => {
+        router.addRoute(route as unknown as RouteRecordRaw);
+      });
+      goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
+      // const sessionTimeout = this.sessionTimeout;
+      // if (sessionTimeout) {
+      //   this.setSessionTimeout(false);
+      // } else {
+      //   const permissionStore = usePermissionStore();
 
-        // 动态路由加载（首次）
-        if (!permissionStore.isDynamicAddedRoute) {
-          const routes = await permissionStore.buildRoutesAction();
-          [...routes, PAGE_NOT_FOUND_ROUTE].forEach((route) => {
-            router.addRoute(route as unknown as RouteRecordRaw);
-          });
-          // 记录动态路由加载完成
-          permissionStore.setDynamicAddedRoute(true);
-        }
+      //   // 动态路由加载（首次）
+      //   if (!permissionStore.isDynamicAddedRoute) {
+      //     const routes = await permissionStore.buildRoutesAction();
+      //     [...routes].forEach((route) => {
+      //       router.addRoute(route as unknown as RouteRecordRaw);
+      //     });
+      //     // 记录动态路由加载完成
+      //     permissionStore.setDynamicAddedRoute(true);
+      //   }
 
-        goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
-      }
+      //   goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
+      // }
       return userInfo;
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
@@ -138,12 +155,20 @@ export const useUserStore = defineStore({
       const userInfo = await getUserInfo();
       const { roles = [] } = userInfo;
       if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[];
-        this.setRoleList(roleList);
+        this.setRoleList(roles.map((item) => item.value) as RoleEnum[]);
       } else {
-        userInfo.roles = [];
         this.setRoleList([]);
       }
+
+      // const routeStore = useRouteStore();
+      // if (isArray(bitControls)) {
+      //   routeStore.setBitControls(
+      //     bitControls.map((item) => [item[0], item[1] << 16]) as Array<number[]>,
+      //   );
+      // } else {
+      //   routeStore.setBitControls([]);
+      // }
+
       this.setUserInfo(userInfo);
       return userInfo;
     },
