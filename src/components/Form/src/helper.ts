@@ -32,7 +32,7 @@ export function createPlaceholderMessage(component: ComponentType) {
 const DATE_TYPE = ['DatePicker', 'MonthPicker', 'WeekPicker', 'TimePicker'];
 
 function genType() {
-  return [...DATE_TYPE, 'RangePicker',"TimeRangePicker"];
+  return [...DATE_TYPE, 'RangePicker', 'TimeRangePicker'];
 }
 
 export function setComponentRuleType(
@@ -45,7 +45,7 @@ export function setComponentRuleType(
   }
   if (['DatePicker', 'MonthPicker', 'WeekPicker', 'TimePicker'].includes(component)) {
     rule.type = valueFormat ? 'string' : 'object';
-  } else if (['RangePicker', 'Upload', 'CheckboxGroup', 'TimePicker'].includes(component)) {
+  } else if (['RangePicker', 'Upload', 'CheckboxGroup'].includes(component)) {
     rule.type = 'array';
   } else if (['InputNumber'].includes(component)) {
     rule.type = 'number';

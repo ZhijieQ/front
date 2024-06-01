@@ -26,6 +26,8 @@ async function createPlugins({ isBuild, root, enableMock, compress, enableAnalyz
   vitePlugins.push(appConfigPlugin);
   vitePlugins.push(DevTools());
 
+  vitePlugins.push(DevTools());
+
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin({ isBuild }));
 
